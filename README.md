@@ -10,6 +10,15 @@ Integration with a CI/CD pipeline allows for automated testing of Terraform scri
 
 You can simulate different AWS regions, accounts, and service configurations to match your production environments more closely.
 
+このパターンは、AWS 上でインフラをプロビジョニングすることなく、Terraform で IaC をローカルにテストするための解決策を提供します。Terraform 1.6 で導入された Terraform Test フレームワークを用い、LocalStack との統合方法を示します。これにより、コスト最適化、速度と効率、一貫性と再現性、分離と安全性、そして簡素化された開発ワークフローを実現します。
+
+LocalStack に対してテストを実行することで、実際の AWS サービスを使用する必要がなくなり、AWS におけるリソースの作成・変更・削除に伴うコストを回避できます。ローカルでのテストは、AWS にリソースをデプロイする場合と比べて大幅に高速です。
+
+この迅速なフィードバックループにより、開発とデバッグが加速します。LocalStack はローカルで動作するため、インターネット接続なしでも Terraform スクリプトの開発とテストが可能です。LocalStack はテストのための一貫した環境を提供し、この一貫性により、外部の AWS の変更やネットワークの問題に左右されず、テスト結果が同じになることを保証します。
+
+CI/CD パイプラインとの統合により、Terraform のスクリプトやモジュールを自動的にテストできます。これにより、デプロイ前にインフラコードが十分に検証されます。LocalStack を用いたテストは、本番の AWS リソースや環境に誤って影響を与えないことを保証します。この分離により、さまざまな構成を安全に試行・テストできます。開発者は即時のフィードバックを得ながらローカルで Terraform スクリプトをデバッグでき、開発プロセスが効率化されます。
+本番環境により近づけるために、異なる AWS リージョン、アカウント、サービス構成をシミュレートできます。
+
 ## Prerequisites
 
 - Docker Installed and configured to enable default Docker socket (/var/run/docker.sock).
@@ -38,27 +47,27 @@ The diagram illustrates a CI/CD pipeline for a LocalStack Docker Container setup
 
 **Source Code Repository**
 
-  1. A user commits code changes to a Source Code Repository.
+1. A user commits code changes to a Source Code Repository.
 
 **CI/CD Pipeline**
 
-  2. The code changes trigger a Build process.
+2. The code changes trigger a Build process.
 
-  3. The Build process also triggers Tests to ensure the code changes are functional.
+3. The Build process also triggers Tests to ensure the code changes are functional.
 
 **LocalStack Docker Container**
 
-  The LocalStack Docker Container hosts the following AWS services locally:
+The LocalStack Docker Container hosts the following AWS services locally:
 
-  4. An Amazon S3 bucket for storing files.
+4. An Amazon S3 bucket for storing files.
 
-  5. Amazon CloudWatch for monitoring and logging.
+5. Amazon CloudWatch for monitoring and logging.
 
-  6. An AWS Lambda Function for running serverless code.
+6. An AWS Lambda Function for running serverless code.
 
-  7. An AWS Step Function for orchestrating multi-step workflows.
+7. An AWS Step Function for orchestrating multi-step workflows.
 
-  8. An Amazon DynamoDB for storing NoSQL data.
+8. An Amazon DynamoDB for storing NoSQL data.
 
 **Workflow**
 
@@ -113,6 +122,7 @@ terraform test
 Verify that all tests successfully passed.
 
 The output should be similar to:
+
 ```shell
 tests/localstack.tftest.hcl... in progress
   run "check_s3_bucket_name"... pass
@@ -132,7 +142,6 @@ Enter the following command to destroy Local Stack Container.
 docker compose down
 ```
 
-
 ## Debugging with AWS CLI
 
 ### Run Local Stack Container
@@ -144,7 +153,6 @@ docker-compose up -d
 ```
 
 Wait until the Local Stack container is up and running.
-
 
 ### Authentication
 
@@ -168,6 +176,7 @@ terraform apply -auto-approve
 ```
 
 You can finally execute AWS CLI commands on the deployed resources for example to check that a state machine has been created.
+
 ```shell
 aws --endpoint-url http://localhost:4566 stepfunctions list-state-machines
 ```
@@ -179,6 +188,7 @@ terraform destroy -auto-approve
 ```
 
 Enter the following command to destroy Local Stack Container.
+
 ```shell
 docker compose down
 ```

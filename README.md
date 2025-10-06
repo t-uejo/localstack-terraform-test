@@ -71,25 +71,25 @@ The LocalStack Docker Container hosts the following AWS services locally:
 
 **Workflow**
 
-- The user commits code changes to the Source Code Repository (1).
+- ユーザーがソースコードリポジトリ (1) にコード変更をコミットします。
 
-- The CI/CD Pipeline detects the changes and triggers a Build process for static Terraform code analysis and for building the LocalStack Docker container (2) and running the Tests (3). The Test stage runs the tests for our infrastructure against LocalStack without deploying any resources in AWS Cloud (Steps 3-8).
+- CI/CD パイプラインが変更を検知し、静的な Terraform コード解析、LocalStack の Docker コンテナのビルド (2)、およびテストの実行 (3) のためにビルドプロセスをトリガーします。テストステージでは、AWS クラウドにリソースをデプロイすることなく、LocalStack を相手にインフラのテストを実行します（手順 3 ～ 8）。
 
-Within the LocalStack Docker Container the test:
+LocalStack の Docker コンテナ内で、テストは次を行います:
 
-- uploads an object into an S3 bucket (Step 4),
+- S3 バケットにオブジェクトをアップロードします（手順 4）。
 
-- invokes an AWS Lambda function through an Amazon S3 event notification (Step 4) with logs stored on Amazon CloudWatch (Step 5),
+- Amazon S3 のイベント通知を通じて AWS Lambda 関数を呼び出し（手順 4）、ログは Amazon CloudWatch に保存されます（手順 5）。
 
-- which in turn will start the execution of a state machine (Step 6),
+- その Lambda が状態遷移の実行を開始します（手順 6）。
 
-- that will write the name of the S3 object into a DynamoDB table (Step 7).
+- 実行は S3 オブジェクト名を DynamoDB テーブルに書き込みます（手順 7）。
 
-- We then verify that the name of the object uploaded matches the entry in the DynamoDB table (Step 8).
+- その後、アップロードしたオブジェクト名が DynamoDB テーブルのエントリと一致することを検証します（手順 8）。
 
-The provided tests include also examples to verify that the S3 bucket is deployed with the given name and that the AWS Lambda function has been successfully deployed.
+提供されているテストには、指定した名前で S3 バケットがデプロイされていること、ならびに AWS Lambda 関数が正常にデプロイされていることを検証する例も含まれます。
 
-The LocalStack Docker Container provides a local development environment that emulates various AWS services, allowing developers to test and iterate on their applications without incurring costs on the actual AWS Cloud.
+LocalStack の Docker コンテナは、さまざまな AWS サービスをエミュレートするローカル開発環境を提供し、開発者は実際の AWS クラウドで費用を発生させることなくアプリケーションをテストおよび反復できます。
 
 ## Terraform Test
 
@@ -157,6 +157,8 @@ Wait until the Local Stack container is up and running.
 ### Authentication
 
 Export the following environment variable to be able to run AWS CLI commands in the local running container that emulates AWS Cloud.
+
+AWS クラウドをエミュレートするローカル実行コンテナ内で AWS CLI コマンドを実行できるように、以下の環境変数をエクスポートします。
 
 ```shell
 export AWS_ACCESS_KEY_ID=test

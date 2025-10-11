@@ -1,22 +1,13 @@
 # Testing AWS infrastructure using LocalStack and Terraform Test
 
-This pattern provides a solution to test IaC in Terraform locally without the need to provision infrastructure in AWS. It uses the [Terraform Test framework](https://developer.hashicorp.com/terraform/language/tests) introduced with Terraform version 1.6 and we showcase how to integrate it with LocalStack for Cost Optimization, Speed and Efficiency, Consistency and Reproducibility, Isolation and Safety and Simplified Development Workflow.
-
-Running tests against LocalStack eliminates the need to use actual AWS services, thus avoiding costs associated with creating, modifying, and destroying resources in AWS. Testing locally is significantly faster than deploying resources in AWS.
-
-This rapid feedback loop accelerates development and debugging. Since LocalStack runs locally, you can develop and test your Terraform scripts without an internet connection. LocalStack provides a consistent environment for testing. This consistency ensures that tests yield the same results regardless of external AWS changes or network issues.
-
-Integration with a CI/CD pipeline allows for automated testing of Terraform scripts and modules. This ensures infrastructure code is thoroughly tested before deployment. Testing with LocalStack ensures that you don't accidentally affect live AWS resources or production environments. This isolation makes it safe to experiment and test various configurations. Developers can debug Terraform scripts locally with immediate feedback, streamlining the development process.
-
-You can simulate different AWS regions, accounts, and service configurations to match your production environments more closely.
-
-このパターンは、AWS 上でインフラをプロビジョニングすることなく、Terraform で IaC をローカルにテストするための解決策を提供します。Terraform 1.6 で導入された Terraform Test フレームワークを用い、LocalStack との統合方法を示します。これにより、コスト最適化、速度と効率、一貫性と再現性、分離と安全性、そして簡素化された開発ワークフローを実現します。
+このパターンは、AWS 上でインフラをプロビジョニングすることなく、Terraform で IaC をローカルにテストするための解決策を提供します。Terraform 1.6 で導入された [Terraform Test framework](https://developer.hashicorp.com/terraform/language/tests)を用い、LocalStack との統合方法を示します。これにより、コスト最適化、速度と効率、一貫性と再現性、分離と安全性、そして簡素化された開発ワークフローを実現します。
 
 LocalStack に対してテストを実行することで、実際の AWS サービスを使用する必要がなくなり、AWS におけるリソースの作成・変更・削除に伴うコストを回避できます。ローカルでのテストは、AWS にリソースをデプロイする場合と比べて大幅に高速です。
 
 この迅速なフィードバックループにより、開発とデバッグが加速します。LocalStack はローカルで動作するため、インターネット接続なしでも Terraform スクリプトの開発とテストが可能です。LocalStack はテストのための一貫した環境を提供し、この一貫性により、外部の AWS の変更やネットワークの問題に左右されず、テスト結果が同じになることを保証します。
 
 CI/CD パイプラインとの統合により、Terraform のスクリプトやモジュールを自動的にテストできます。これにより、デプロイ前にインフラコードが十分に検証されます。LocalStack を用いたテストは、本番の AWS リソースや環境に誤って影響を与えないことを保証します。この分離により、さまざまな構成を安全に試行・テストできます。開発者は即時のフィードバックを得ながらローカルで Terraform スクリプトをデバッグでき、開発プロセスが効率化されます。
+
 本番環境により近づけるために、異なる AWS リージョン、アカウント、サービス構成をシミュレートできます。
 
 ## Prerequisites
@@ -47,27 +38,27 @@ The diagram illustrates a CI/CD pipeline for a LocalStack Docker Container setup
 
 **Source Code Repository**
 
-1. A user commits code changes to a Source Code Repository.
+1. ユーザーがソースコードリポジトリにコード変更をコミットします。
 
-**CI/CD Pipeline**
+**CI/CD パイプライン**
 
-2. The code changes trigger a Build process.
+2. コード変更がビルドプロセスをトリガーします。
 
-3. The Build process also triggers Tests to ensure the code changes are functional.
+3. ビルドプロセスは、コード変更が機能することを確認するためにテストもトリガーします。
 
 **LocalStack Docker Container**
 
-The LocalStack Docker Container hosts the following AWS services locally:
+LocalStack Docker コンテナは、以下の AWS サービスをローカルでホストします：
 
-4. An Amazon S3 bucket for storing files.
+4. ファイル保存用の Amazon S3 バケット。
 
-5. Amazon CloudWatch for monitoring and logging.
+5. 監視とログ記録用の Amazon CloudWatch。
 
-6. An AWS Lambda Function for running serverless code.
+6. サーバーレスコード実行用の AWS Lambda 関数。
 
-7. An AWS Step Function for orchestrating multi-step workflows.
+7. マルチステップワークフロー調整用の AWS Step Function。
 
-8. An Amazon DynamoDB for storing NoSQL data.
+8. NoSQL データ保存用の Amazon DynamoDB。
 
 **Workflow**
 
@@ -95,17 +86,17 @@ LocalStack の Docker コンテナは、さまざまな AWS サービスをエ�
 
 ### Run Local Stack Container
 
-In the cloned repository start Local Start Docker execution in detached mode by enter the following command in bash shell.
+クローンしたリポジトリで、bash シェルで以下のコマンドを入力して、LocalStack Docker をデタッチモードで実行開始します。
 
 ```shell
 docker compose up -d
 ```
 
-Wait until the Local Stack container is up and running.
+LocalStack コンテナが起動して実行されるまで待機します。
 
 ### Terraform Initialization
 
-Enter the following command from the cloned repsotiory to initialize Terraform.
+クローンしたリポジトリから以下のコマンドを入力して Terraform を初期化します。
 
 ```shell
 terraform init
@@ -113,15 +104,15 @@ terraform init
 
 ### Run Terraform Test
 
-Enter the following command to execute Terraform Test.
+Terraform Test を実行するために以下のコマンドを入力します。
 
 ```shell
 terraform test
 ```
 
-Verify that all tests successfully passed.
+すべてのテストが正常に通過したことを確認します。
 
-The output should be similar to:
+出力は以下のようになります：
 
 ```shell
 tests/localstack.tftest.hcl... in progress
@@ -136,7 +127,7 @@ Success! 3 passed, 0 failed.
 
 ### Resource Cleanup
 
-Enter the following command to destroy Local Stack Container.
+LocalStack コンテナを破棄するために以下のコマンドを入力します。
 
 ```shell
 docker compose down
@@ -146,17 +137,15 @@ docker compose down
 
 ### Run Local Stack Container
 
-In the cloned repository start Local Start Docker execution in detached mode by enter the following command in bash shell.
+クローンしたリポジトリで、bash シェルで以下のコマンドを入力して、LocalStack Docker をデタッチモードで実行開始します。
 
 ```shell
 docker-compose up -d
 ```
 
-Wait until the Local Stack container is up and running.
+LocalStack コンテナが起動して実行されるまで待機します。
 
 ### Authentication
-
-Export the following environment variable to be able to run AWS CLI commands in the local running container that emulates AWS Cloud.
 
 AWS クラウドをエミュレートするローカル実行コンテナ内で AWS CLI コマンドを実行できるように、以下の環境変数をエクスポートします。
 
@@ -169,7 +158,7 @@ export AWS_REGION=eu-central-1
 
 ### Create Resources Locally
 
-Create resources in the local running container.
+ローカルで実行中のコンテナ内でリソースを作成します。
 
 ```shell
 terraform init
@@ -177,7 +166,7 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-You can finally execute AWS CLI commands on the deployed resources for example to check that a state machine has been created.
+最後に、デプロイされたリソースに対して AWS CLI コマンドを実行できます。例えば、ステートマシンが作成されたことを確認することができます。
 
 ```shell
 aws --endpoint-url http://localhost:4566 stepfunctions list-state-machines
@@ -189,7 +178,7 @@ aws --endpoint-url http://localhost:4566 stepfunctions list-state-machines
 terraform destroy -auto-approve
 ```
 
-Enter the following command to destroy Local Stack Container.
+LocalStack コンテナを破棄するために以下のコマンドを入力します。
 
 ```shell
 docker compose down
@@ -197,7 +186,7 @@ docker compose down
 
 ## GitHub Actions
 
-We provide an example how to integrate LocalStack and Terraform Test in a CI/CD pipeline with [GitHub Actions](.github/workflows/localstack-terraform-test.yml).
+[GitHub Actions](.github/workflows/localstack-terraform-test.yml)を使用して CI/CD パイプラインで LocalStack と Terraform Test を統合する方法の例を提供しています。
 
 ## Authors
 

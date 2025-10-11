@@ -3,7 +3,7 @@ name: LocalStack Terraform Test
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
   workflow_dispatch: {}
 
@@ -12,29 +12,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build and Start LocalStack Container
-      run: |
-        docker compose up -d
+      - name: Build and Start LocalStack Container
+        run: |
+          docker compose up -d
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: latest
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
 
-    - name: Run Terraform Init and Validation
-      run: |
-        terraform init
-        terraform validate
-        terraform fmt --recursive --check
-        terraform plan
-        terraform show
+      - name: Run Terraform Init
+        run: |
+          terraform init
 
-    - name: Run Terraform Test
-      run: |
-        terraform test
+      - name: Update Lock File
+        run: |
+          terraform providers lock \
+            -platform=linux_amd64 \
+            -platform=darwin_amd64
 
-    - name: Stop and Delete LocalStack Container
-      if: always()
-      run: docker compose down
+      - name: Run Terraform Validation and Plan
+        run: |
+          terraform validate
+          terraform fmt --recursive --check
+          terraform plan
+          terraform show
+
+      - name: Run Terraform Test
+        run: |
+          terraform test
+
+      - name: Stop and Delete LocalStack Container
+        if: always()
+        run: docker compose down
